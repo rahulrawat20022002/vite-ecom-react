@@ -2,15 +2,24 @@ import React, { Fragment, useState } from "react";
 
 import { useContext } from "react";
 import MyContext from "../../context/MyContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BsFillCloudSunFill } from "react-icons/bs";
 import { FiSun } from "react-icons/fi";
 import { Dialog, Transition } from "@headlessui/react";
 import { RxCross2 } from "react-icons/rx";
+import { toast } from "react-toastify";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.clear("user");
+    toast.success("Signed out Successfully");
+    navigate("/");
+  };
   const { mode, toggleMode } = useContext(MyContext);
   const [open, setOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <div>
       <div className="bg-white sticky top-0 z-50  ">
@@ -62,40 +71,60 @@ function Navbar() {
                     </button>
                   </div>
                   <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                    <Link
-                      to={"/allproducts"}
-                      className="text-sm font-medium text-gray-900 "
-                      style={{ color: mode === "dark" ? "white" : "" }}
-                    >
-                      All Products
-                    </Link>
-                    <div className="flow-root">
+                    {user && (
                       <Link
-                        to={"/order"}
+                        to={"/allproducts"}
+                        className="text-sm font-medium text-gray-900 "
                         style={{ color: mode === "dark" ? "white" : "" }}
-                        className="-m-2 block p-2 font-medium text-gray-900"
                       >
-                        Order
+                        All Products
                       </Link>
+                    )}
+
+                    <div className="flow-root">
+                      {user && (
+                        <Link
+                          to={"/order"}
+                          style={{ color: mode === "dark" ? "white" : "" }}
+                          className="-m-2 block p-2 font-medium text-gray-900"
+                        >
+                          Order
+                        </Link>
+                      )}
                     </div>
 
                     <div className="flow-root">
-                      <Link
-                        to={"/dashboard"}
-                        className="-m-2 block p-2 font-medium text-gray-900"
-                        style={{ color: mode === "dark" ? "white" : "" }}
-                      >
-                        admin
-                      </Link>
+                      {user && user.user.email === "abcd@gmail.com" ? (
+                        <Link
+                          to={"/dashboard"}
+                          className="-m-2 block p-2 font-medium text-gray-900"
+                          style={{ color: mode === "dark" ? "white" : "" }}
+                        >
+                          admin
+                        </Link>
+                      ) : (
+                        ""
+                      )}
                     </div>
 
                     <div className="flow-root">
-                      <a
-                        className="-m-2 block p-2 font-medium text-gray-900 cursor-pointer"
-                        style={{ color: mode === "dark" ? "white" : "" }}
-                      >
-                        Logout
-                      </a>
+                      {user ? (
+                        <a
+                          className="-m-2 block p-2 font-medium text-gray-900 cursor-pointer"
+                          style={{ color: mode === "dark" ? "white" : "" }}
+                          onClick={logout}
+                        >
+                          Logout
+                        </a>
+                      ) : (
+                        <Link
+                          to="/login"
+                          className="text-sm font-medium text-gray-700 cursor-pointer  "
+                          style={{ color: mode === "dark" ? "white" : "" }}
+                        >
+                          LogIn
+                        </Link>
+                      )}
                     </div>
                     <div className="flow-root">
                       <Link
@@ -197,34 +226,54 @@ function Navbar() {
 
                 <div className="ml-auto flex items-center">
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <Link
-                      to={"/allproducts"}
-                      className="text-sm font-medium text-gray-700 "
-                      style={{ color: mode === "dark" ? "white" : "" }}
-                    >
-                      All Products
-                    </Link>
-                    <Link
-                      to={"/order"}
-                      className="text-sm font-medium text-gray-700 "
-                      style={{ color: mode === "dark" ? "white" : "" }}
-                    >
-                      Order
-                    </Link>
-                    <Link
-                      to={"/dashboard"}
-                      className="text-sm font-medium text-gray-700 "
-                      style={{ color: mode === "dark" ? "white" : "" }}
-                    >
-                      Admin
-                    </Link>
+                    {user && (
+                      <Link
+                        to={"/allproducts"}
+                        className="text-sm font-medium text-gray-700 "
+                        style={{ color: mode === "dark" ? "white" : "" }}
+                      >
+                        All Products
+                      </Link>
+                    )}
+                    {user && (
+                      <Link
+                        to={"/order"}
+                        className="text-sm font-medium text-gray-700 "
+                        style={{ color: mode === "dark" ? "white" : "" }}
+                      >
+                        Order
+                      </Link>
+                    )}
 
-                    <a
-                      className="text-sm font-medium text-gray-700 cursor-pointer  "
-                      style={{ color: mode === "dark" ? "white" : "" }}
-                    >
-                      Logout
-                    </a>
+                    {user && user.user.email === "abcd@gmail.com" ? (
+                      <Link
+                        to={"/dashboard"}
+                        className="text-sm font-medium text-gray-700 "
+                        style={{ color: mode === "dark" ? "white" : "" }}
+                      >
+                        Admin
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+
+                    {user ? (
+                      <a
+                        className="text-sm font-medium text-gray-700 cursor-pointer  "
+                        style={{ color: mode === "dark" ? "white" : "" }}
+                        onClick={logout}
+                      >
+                        Logout
+                      </a>
+                    ) : (
+                      <Link
+                        to="/login"
+                        className="text-sm font-medium text-gray-700 cursor-pointer  "
+                        style={{ color: mode === "dark" ? "white" : "" }}
+                      >
+                        LogIn
+                      </Link>
+                    )}
                   </div>
 
                   <div className="hidden lg:ml-8 lg:flex">
