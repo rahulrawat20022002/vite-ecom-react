@@ -7,7 +7,7 @@ export default function Footer() {
   const { mode } = useContext(MyContext);
   return (
     <footer
-      className="text-gray-600 body-font bg-gray-300"
+      className="text-gray-600 body-font bg-gray-300 "
       style={{
         backgroundColor: mode === "dark" ? "rgb(46 49 55)" : "",
         color: mode === "dark" ? "white" : "",

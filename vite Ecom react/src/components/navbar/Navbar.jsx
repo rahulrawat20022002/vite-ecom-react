@@ -8,6 +8,7 @@ import { FiSun } from "react-icons/fi";
 import { Dialog, Transition } from "@headlessui/react";
 import { RxCross2 } from "react-icons/rx";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function Navbar() {
     toast.success("Signed out Successfully");
     navigate("/");
   };
+  const cartItems = useSelector((state) => state.cart);
   const { mode, toggleMode } = useContext(MyContext);
   const [open, setOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
@@ -163,7 +165,7 @@ function Navbar() {
         </Transition.Root>
 
         {/* Desktop view */}
-        <header className="relative bg-white">
+        <header className="relative  bg-white">
           <p
             className="flex h-10 items-center justify-center bg-blue-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8"
             style={{
@@ -341,7 +343,7 @@ function Navbar() {
                         className="ml-2 text-sm font-medium text-gray-700 group-"
                         style={{ color: mode === "dark" ? "white" : "" }}
                       >
-                        0
+                        {cartItems.length}
                       </span>
                       <span className="sr-only">items in cart, view bag</span>
                     </Link>
